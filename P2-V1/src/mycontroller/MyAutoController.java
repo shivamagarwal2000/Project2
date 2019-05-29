@@ -1,6 +1,7 @@
 package mycontroller;
 
 import controller.CarController;
+import swen30006.driving.Simulation;
 import world.Car;
 import java.util.HashMap;
 
@@ -32,6 +33,17 @@ public class MyAutoController extends CarController{
 		public void update() {
 			// Gets what the car can see
 			HashMap<Coordinate, MapTile> currentView = getView();
+			Coordinate currentPosition = new Coordinate(this.getPosition());
+			Coordinate targetPosition;
+			MapTile tile = currentView.get(
+					new Coordinate(currentPosition.x, currentPosition.y));
+			
+			if((targetPosition = getDetector().getParcel(currentView, this))== null) {}
+			
+			if(Simulation.toConserve() == Simulation.StrategyMode.HEALTH) {
+				HealthConsStratergy obj = new HealthConsStratergy(this, getOrientation(), currentView, targetPosition);
+			}
+			 	
 			
 			// checkStateChange();
 			if(getSpeed() < CAR_MAX_SPEED){       // Need speed to turn and progress toward the exit

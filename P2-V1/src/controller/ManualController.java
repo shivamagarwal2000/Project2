@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.Set;
 import com.badlogic.gdx.Input;
 import world.Car;
 import swen30006.driving.Simulation;
+import tiles.MapTile;
+import utilities.Coordinate;
 
 // Manual Controls for the car
 public class ManualController extends CarController {
@@ -15,6 +18,7 @@ public class ManualController extends CarController {
 	public void update(){
 		Set<Integer> parcels = Simulation.getParcels();
 		Simulation.resetParcels();
+		
         for (int k : parcels){
 		     switch (k){
 		        case Input.Keys.B:

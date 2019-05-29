@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import controller.CarController;
 import tiles.MapTile;
+import tiles.TrapTile;
 import utilities.Coordinate;
 import world.WorldSpatial;
 
@@ -104,5 +105,27 @@ public class Detector {
 			}
 		}
 		return false;
+	}
+	
+	// check if there is a parcel in the view and return its coordinates
+	// This type of function can be generalized to fetch any required target tile and return to the controller
+	public Coordinate getParcel(HashMap<Coordinate, MapTile> currentView, CarController controller) {
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		for (int i = -4; i <= 4; i++) {
+			for (int j = -4; j <= 4; j++) {
+				Coordinate temp = new Coordinate(currentPosition.x +i, currentPosition.y +j);
+				MapTile tile = currentView.get(temp);
+				if (tile.isType(MapTile.Type.TRAP)) {
+					TrapTile trapT = (TrapTile) tile;
+					if(trapT.getTrap().equals("parcel")) {
+						return(temp);
+					}
+					
+				}
+				
+			}	
+		}
+		
+		return(null);
 	}
 }
