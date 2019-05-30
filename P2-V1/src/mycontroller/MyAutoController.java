@@ -38,58 +38,47 @@ public class MyAutoController extends CarController{
 			
 			Coordinate currentPosition = new Coordinate(controller.getPosition());
 			WorldSpatial.Direction currentDirection = controller.getOrientation();
-			System.out.println(currentDirection);
 			switch (currentDirection) {
 			case EAST:
 				if(target.x==currentPosition.x&&(target.y-1)==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
 					turnAlready=true;
-					System.out.println("East               Left");
 				} else if(target.x==currentPosition.x&&(target.y+1)==currentPosition.y&&!turnAlready){
 					controller.turnRight();
 					turnAlready=true;
-					System.out.println("East               Right");
 				}
 				return;
 			case NORTH:
 				if((target.x+1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
 					turnAlready=true;
-					System.out.println("N               Left");
 				} else if((target.x-1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnRight();
 					turnAlready=true;
-					System.out.println("N               Right");
 				}
 				return;
 			case SOUTH:
 				if((target.x-1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
 					turnAlready=true;
-					System.out.println("S               Left");
 				} else if((target.x+1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnRight();
 					turnAlready=true;
-					System.out.println("S               Right");
 				}
 				return;
 			case WEST:
 				if(target.x==currentPosition.x&&(target.y+1)==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
 					turnAlready=true;
-					System.out.println("W               Left");
 				} else if(target.x==currentPosition.x&&(target.y-1)==currentPosition.y&&!turnAlready){
 					controller.turnRight();
 					turnAlready=true;
-					System.out.println("W               Right");
 				}
 				return;
 			}
 		}
 	}
 	
-	// Coordinate initialGuess;
-	// boolean notSouth = true;
 	@Override
 	public void update() {
 		// Gets what the car can see
@@ -104,8 +93,9 @@ public class MyAutoController extends CarController{
 				obj.generateSourceAndDestination(currentPosition, targetPosition);
 				obj.generateDArray();
 				ArrayList <Coordinate> test= obj.dijkstra();
-				System.out.println(test);
 				move(this, test);
+			} else if (Simulation.toConserve() == Simulation.StrategyMode.FUEL) {
+				
 			}
 		}
 		
@@ -117,19 +107,19 @@ public class MyAutoController extends CarController{
 		}
 
 		if (isFollowingWall) {
-			// If wall no longer on left, turn left
+			// If wall no longer on right, turn right
 			if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
-				turnLeft();
+				turnRight();
 			} else {
-				// If wall on left and wall straight ahead, turn right
+				// If wall on right and wall straight ahead, turn left
 				if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
-					turnRight();
+					turnLeft();
 				}
 			}
 		} else {
-			// Start wall-following (with wall on left) as soon as we see a wall straight ahead
+			// Start wall-following (with wall on right) as soon as we see a wall straight ahead
 			if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
-				turnRight();
+				turnLeft();
 				isFollowingWall = true;
 			}
 		}

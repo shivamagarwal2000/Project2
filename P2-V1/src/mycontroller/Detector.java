@@ -118,13 +118,13 @@ public class Detector {
 			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
 		switch (orientation) {
 		case EAST:
-			return checkNorthWall(controller, currentView, wallSensitivity);
-		case NORTH:
-			return checkWestWall(controller, currentView, wallSensitivity);
-		case SOUTH:
-			return checkEastWall(controller, currentView, wallSensitivity);
-		case WEST:
 			return checkSouthWall(controller, currentView, wallSensitivity);
+		case NORTH:
+			return checkEastWall(controller, currentView, wallSensitivity);
+		case SOUTH:
+			return checkWestWall(controller, currentView, wallSensitivity);
+		case WEST:
+			return checkNorthWall(controller, currentView, wallSensitivity);
 		default:
 			return false;
 		}

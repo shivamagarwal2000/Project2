@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import controller.CarController;
 import tiles.MapTile;
-import tiles.TrapTile;
 import utilities.Coordinate;
 
 public class MapInfoCollector {
@@ -42,18 +41,5 @@ public class MapInfoCollector {
 		if (!allTiles.get(coordinate).isType(MapTile.Type.TRAP)) {
 			allTiles.put(coordinate, mapTile);
 		}
-	}
-	
-	private boolean foundEnoughParcel() {
-		int foundParcel = 0;
-		for (Coordinate c : visitedTiles.keySet()) {
-			MapTile tile = visitedTiles.get(c);
-			if (tile.isType(MapTile.Type.TRAP)) {
-				if (((TrapTile) tile).getTrap().equals("parcel")) {
-					foundParcel++;
-				}
-			}
-		}
-		return foundParcel >= 2;
 	}
 }
