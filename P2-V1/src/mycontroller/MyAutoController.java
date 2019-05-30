@@ -50,6 +50,7 @@ public class MyAutoController extends CarController{
 					turnAlready=true;
 					System.out.println("East               Right");
 				}
+				return;
 			case NORTH:
 				if((target.x+1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
@@ -60,6 +61,7 @@ public class MyAutoController extends CarController{
 					turnAlready=true;
 					System.out.println("N               Right");
 				}
+				return;
 			case SOUTH:
 				if((target.x-1)==currentPosition.x&&target.y==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
@@ -70,6 +72,7 @@ public class MyAutoController extends CarController{
 					turnAlready=true;
 					System.out.println("S               Right");
 				}
+				return;
 			case WEST:
 				if(target.x==currentPosition.x&&(target.y+1)==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
@@ -80,6 +83,7 @@ public class MyAutoController extends CarController{
 					turnAlready=true;
 					System.out.println("W               Right");
 				}
+				return;
 			}
 		}
 	}
