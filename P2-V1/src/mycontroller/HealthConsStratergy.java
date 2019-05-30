@@ -1,7 +1,11 @@
 package mycontroller;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+
+import com.badlogic.gdx.utils.Queue;
 
 import controller.CarController;
 import tiles.MapTile;
@@ -24,7 +28,7 @@ public class HealthConsStratergy extends IStratergy {
 		weightedMap = new HashMap<Coordinate, Integer>();
 	}
 	
-	// generate the weighted map based on the type of the tile type
+	// generate the weighted map based on the type of the tile
 	public void generateWeightedMap() {
 		// run through every tile in the current view
 		for (Coordinate var : currentView.keySet()) {
@@ -95,6 +99,8 @@ public class HealthConsStratergy extends IStratergy {
 		}
 		
 	}
+	
+	// Computes the minimum distance
 	public int minDistance(int dist[], Boolean b[]) {
 		int min = Integer.MAX_VALUE, index = -1;
 		for(int x = 0; x < 81; x++) {
@@ -107,31 +113,58 @@ public class HealthConsStratergy extends IStratergy {
 	}
 	
 	public void printGraph(int dist[], int x) {
-		System.out.println("Distance from source"+ src +"to Destination is"+dest);
+		System.out.println("Distance from source  "+ src +"to Destination is  "+dest);
 		
-		System.out.println(dest + "tt"+ dist[dest]);
+		System.out.println(dest + " tt "+ dist[dest]);
+		
+	}
+	
+	// generates a list of coordinates in order of the path array
+	public void generatePath(int path[]) {
 		
 	}
 	
 	// apply dijkstra's algorithm to the dArray that has the 
 	public void dijkstra() {
+		
 		int dist[] = new int[81];
+		
+		// Initialize every node as unvisited and make it unreachable at first
 		Boolean b[] = new Boolean[81];
+		
+		// Array of the previous indexes that can be used to generate the coordinates of paths
+		int path[] = new int[81];
+		
+		// Initialize the distance array to vary large value and set every node as unvisited
 		for (int i = 0; i < 81; i++) {
 			dist[i] = Integer.MAX_VALUE;
 			b[i] = false;
 		}
+		// Initialize the src as local variable and put the distance of it to 0
 		int src = this.src;
 		dist[src] = 0;
+		
+		// Find the shortest distance and shortest paths
 		for (int i = 0; i < 81; i++) {
+			
+			// Generate minimum distance for the given and update the node as visited
 			int u = minDistance(dist, b);
 			b[u] = true;
+			
+			// Check against every element and only update distance if its unvisited and the new distance
+			// is less than the computed distance
 			for (int x = 0; x < 81; x++) {
 				if(!b[x] && dArray[u][x] != 0 && dist[u] != Integer.MAX_VALUE && dist[u] + dArray[u][x] < dist[x]) {
+					
+					// update the distance
 					dist[x] = dist[u] + dArray[u][x];
+					
+					// update the path
+					path[x] = u;
 				}
 			}
 			printGraph(dist, 81);
+			generatePath(path);
 		}
 	}
 }
