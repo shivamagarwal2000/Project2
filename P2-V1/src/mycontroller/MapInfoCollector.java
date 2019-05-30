@@ -46,8 +46,8 @@ public class MapInfoCollector {
 	
 	private boolean foundEnoughParcel() {
 		int foundParcel = 0;
-		for (Coordinate c : allTiles.keySet()) {
-			MapTile tile = allTiles.get(c);
+		for (Coordinate c : visitedTiles.keySet()) {
+			MapTile tile = visitedTiles.get(c);
 			if (tile.isType(MapTile.Type.TRAP)) {
 				if (((TrapTile) tile).getTrap().equals("parcel")) {
 					foundParcel++;

@@ -9,6 +9,93 @@ import utilities.Coordinate;
 import world.WorldSpatial;
 
 public class Detector {
+	
+	public boolean checkAhead(CarController controller, WorldSpatial.Direction orientation,
+			HashMap<Coordinate, MapTile> currentView, MapTile.Type type) {
+		switch (orientation) {
+		case EAST:
+			return checkEast(controller, currentView, Settings.getWallSensitivity(), type);
+		case NORTH:
+			return checkNorth(controller, currentView, Settings.getWallSensitivity(), type);
+		case SOUTH:
+			return checkSouth(controller, currentView, Settings.getWallSensitivity(), type);
+		case WEST:
+			return checkWest(controller, currentView, Settings.getWallSensitivity(), type);
+		default:
+			return false;
+		}
+	}
+	
+	public boolean checkEast(CarController controller,
+			HashMap<Coordinate, MapTile> currentView, int sensitivity, MapTile.Type type) {
+		// Check east tile
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		for (int i = 0; i <= sensitivity; i++) {
+			MapTile tile = currentView.get(
+			new Coordinate(currentPosition.x + i, currentPosition.y));
+			if (tile.isType(type)) {
+				if(type == MapTile.Type.TRAP) {
+					if(((TrapTile) tile).getTrap().equals("parcel"))
+						return true;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean checkSouth(CarController controller,
+			HashMap<Coordinate, MapTile> currentView, int sensitivity, MapTile.Type type) {
+		// Check South tile
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		for (int i = 0; i <= sensitivity; i++) {
+			MapTile tile = currentView.get(
+			new Coordinate(currentPosition.x, currentPosition.y - 1));
+			if (tile.isType(type)) {
+				if(type == MapTile.Type.TRAP) {
+					if(((TrapTile) tile).getTrap().equals("parcel"))
+						return true;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean checkWest(CarController controller,
+			HashMap<Coordinate, MapTile> currentView, int sensitivity, MapTile.Type type) {
+		// Check West tile
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		for (int i = 0; i <= sensitivity; i++) {
+			MapTile tile = currentView.get(
+			new Coordinate(currentPosition.x - i, currentPosition.y));
+			if (tile.isType(type)) {
+				if(type == MapTile.Type.TRAP) {
+					if(((TrapTile) tile).getTrap().equals("parcel"))
+						return true;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkNorth(CarController controller,
+			HashMap<Coordinate, MapTile> currentView, int sensitivity, MapTile.Type type) {
+		// Check North tile
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		for (int i = 0; i <= sensitivity; i++) {
+			MapTile tile = currentView.get(
+			new Coordinate(currentPosition.x, currentPosition.y + i));
+			if (tile.isType(type)) {
+				if(type == MapTile.Type.TRAP) {
+					if(((TrapTile) tile).getTrap().equals("parcel"))
+						return true;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//Check if you have a wall in front of you
 	public boolean checkWallAhead(CarController controller, WorldSpatial.Direction orientation,
 			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
