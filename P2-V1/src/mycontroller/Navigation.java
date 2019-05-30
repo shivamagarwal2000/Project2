@@ -16,27 +16,27 @@ public class Navigation {
 			WorldSpatial.Direction currentDirection = controller.getOrientation();
 			switch (currentDirection) {
 			case EAST:
-				if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
-					controller.turnLeft();
-				} else if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
-					controller.turnRight();
-				}
-			case NORTH:
 				if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
-					controller.turnLeft();
-				} else if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
-					controller.turnRight();
-				}
-			case SOUTH:
-				if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
 					controller.turnLeft();
 				} else if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
 					controller.turnRight();
 				}
-			case WEST:
-				if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+			case NORTH:
+				if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
 					controller.turnLeft();
 				} else if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
+					controller.turnRight();
+				}
+			case SOUTH:
+				if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnRight();
+				}
+			case WEST:
+				if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
 					controller.turnRight();
 				}
 			}
