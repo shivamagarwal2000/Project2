@@ -32,11 +32,19 @@ public class MyAutoController extends CarController{
 		boolean turnAlready = false;
 		if (getDetector().checkWallAhead(this, getOrientation(), this.getView(), Settings.getWallSensitivity())
                 && this.getSpeed() == 0) {
-            this.applyReverseAcceleration();
+            //this.applyReverseAcceleration();
 		} else if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
 			applyForwardAcceleration();   // Tough luck if there's a wall in the way
+			
+			System.out.println("Accelerate! ");
+			
 		}
+		
+		System.out.println("Call!");
+	
+		
 		for (Coordinate target: path){
+			
 			Coordinate currentPosition = new Coordinate(controller.getPosition());
 			WorldSpatial.Direction currentDirection = controller.getOrientation();
 			switch (currentDirection) {
@@ -92,7 +100,7 @@ public class MyAutoController extends CarController{
 		HashMap<Coordinate, MapTile> currentView = getView();
 		Coordinate currentPosition = new Coordinate(this.getPosition());
 		Coordinate targetPosition;
-		if((targetPosition = getDetector().getParcel(currentView, this))!= null) {
+		if((targetPosition = getDetector().getParcel(currentView, this))!= null && !getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
 		
 			if(Simulation.toConserve() == Simulation.StrategyMode.HEALTH) {
 				HealthConsStratergy obj = new HealthConsStratergy(this, getOrientation(), currentView, targetPosition);
@@ -103,7 +111,9 @@ public class MyAutoController extends CarController{
 				System.out.println(test);
 				move(this, test);
 			}
-		}else{
+		}
+		
+		else{
 			
 		// checkStateChange();
 		if (getDetector().checkWallAhead(this, getOrientation(), this.getView(), Settings.getWallSensitivity())
@@ -126,7 +136,7 @@ public class MyAutoController extends CarController{
 		} else {
 			// Start wall-following (with wall on left) as soon as we see a wall straight ahead
 			if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
-				turnRight();
+				turnLeft();
 				isFollowingWall = true;
 			}
 		}
