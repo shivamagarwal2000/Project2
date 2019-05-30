@@ -11,16 +11,16 @@ import world.WorldSpatial;
 public class Detector {
 	
 	public boolean checkAhead(CarController controller, WorldSpatial.Direction orientation,
-			HashMap<Coordinate, MapTile> currentView, MapTile.Type type) {
+			HashMap<Coordinate, MapTile> currentView, int sensitivity, MapTile.Type type) {
 		switch (orientation) {
 		case EAST:
-			return checkEast(controller, currentView, Settings.getWallSensitivity(), type);
+			return checkEast(controller, currentView, sensitivity, type);
 		case NORTH:
-			return checkNorth(controller, currentView, Settings.getWallSensitivity(), type);
+			return checkNorth(controller, currentView, sensitivity, type);
 		case SOUTH:
-			return checkSouth(controller, currentView, Settings.getWallSensitivity(), type);
+			return checkSouth(controller, currentView, sensitivity, type);
 		case WEST:
-			return checkWest(controller, currentView, Settings.getWallSensitivity(), type);
+			return checkWest(controller, currentView, sensitivity, type);
 		default:
 			return false;
 		}
