@@ -14,6 +14,7 @@ import utilities.Coordinate;
 public class MyAutoController extends CarController{		
 		
 	private boolean isFollowingWall = false; // This is set to true when the car starts sticking to a wall.
+	private boolean flag = false;
 	
 	public MyAutoController(Car car) {
 		super(car);
@@ -28,36 +29,56 @@ public class MyAutoController extends CarController{
 	}
 	
 	public void move(CarController controller, ArrayList <Coordinate> path){
-		if(controller.getSpeed() < Settings.getCAR_MAX_SPEED()){
-			controller.applyForwardAcceleration();
+		boolean turnAlready = false;
+		if (getDetector().checkWallAhead(this, getOrientation(), this.getView(), Settings.getWallSensitivity())
+                && this.getSpeed() == 0) {
+            this.applyReverseAcceleration();
+		} else if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
+			applyForwardAcceleration();   // Tough luck if there's a wall in the way
 		}
 		for (Coordinate target: path){
 			Coordinate currentPosition = new Coordinate(controller.getPosition());
 			WorldSpatial.Direction currentDirection = controller.getOrientation();
 			switch (currentDirection) {
 			case EAST:
-				if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
+				if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
-				} else if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+					turnAlready=true;
+					System.out.println("East               Left");
+				} else if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y&&!turnAlready){
 					controller.turnRight();
+					turnAlready=true;
+					System.out.println("East               Right");
 				}
 			case NORTH:
-				if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
+				if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
-				} else if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
+					turnAlready=true;
+					System.out.println("N               Left");
+				} else if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y&&!turnAlready){
 					controller.turnRight();
+					turnAlready=true;
+					System.out.println("N               Right");
 				}
 			case SOUTH:
-				if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+				if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
-				} else if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+					turnAlready=true;
+					System.out.println("S               Left");
+				} else if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y&&!turnAlready){
 					controller.turnRight();
+					turnAlready=true;
+					System.out.println("S               Right");
 				}
 			case WEST:
-				if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+				if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y&&!turnAlready){
 					controller.turnLeft();
-				} else if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
+					turnAlready=true;
+					System.out.println("W               Left");
+				} else if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y&&!turnAlready){
 					controller.turnRight();
+					turnAlready=true;
+					System.out.println("W               Right");
 				}
 			}
 		}
@@ -79,12 +100,16 @@ public class MyAutoController extends CarController{
 				obj.generateSourceAndDestination(currentPosition, targetPosition);
 				obj.generateDArray();
 				ArrayList <Coordinate> test= obj.dijkstra();
+				System.out.println(test);
 				move(this, test);
 			}
 		}else{
 			
 		// checkStateChange();
-		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
+		if (getDetector().checkWallAhead(this, getOrientation(), this.getView(), Settings.getWallSensitivity())
+	                && this.getSpeed() == 0) {
+	            this.applyReverseAcceleration();
+		} else if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
 			applyForwardAcceleration();   // Tough luck if there's a wall in the way
 		}
 

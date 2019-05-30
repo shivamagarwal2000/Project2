@@ -114,9 +114,9 @@ public class HealthConsStratergy extends IStratergy {
 	}
 	
 	public void printGraph(int dist[], int x) {
-		System.out.println("Distance from source  "+ src +"to Destination is  "+dest);
-		
-		System.out.println(dest + " tt "+ dist[dest]);
+//		System.out.println("Distance from source  "+ src +"to Destination is  "+dest);
+//		
+//		System.out.println(dest + " tt "+ dist[dest]);
 		
 	}
 	
