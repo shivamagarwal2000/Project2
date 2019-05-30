@@ -1,5 +1,6 @@
 package mycontroller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -119,15 +120,53 @@ public class HealthConsStratergy extends IStratergy {
 		
 	}
 	
-	// generates a list of coordinates in order of the path array
-	public void generatePath(int path[]) {
+	//returns a int array of indexes from src to dest.
+	public ArrayList<Integer> backtrackPath(int[] previousIndex){
 		
+		ArrayList<Integer> reversePath = new ArrayList<>();
+		ArrayList<Integer> path = new ArrayList<>();
+
+		int index = dest;
+
+		while(index != src){
+			reversePath.add(index);
+			index = previousIndex[index];
+		}
+		for(Integer i: reversePath){
+			path.add(i);
+		}
+		return path;
 	}
+
+	
+		//Converts the indexes to coordinates.
+	public ArrayList<Coordinate> convertIndexToCoordinate(ArrayList<Integer>indexes){
+
+		ArrayList<Coordinate> followCoordinates = new ArrayList<>();
+		int count = -1;
+
+		for(Integer i: indexes){
+			count = 0;
+			for (Coordinate keys : currentView.keySet()) {
+				if( count == i){
+					followCoordinates.add(keys);
+					count += 1;
+					break;
+				}
+					count += 1;
+			}
+		}
+		return followCoordinates;
+	}
+
 	
 	// apply dijkstra's algorithm to the dArray that has the 
-	public void dijkstra() {
+	public ArrayList<Coordinate> dijkstra() {
 		
 		int dist[] = new int[81];
+		
+		ArrayList<Coordinate> followCoordinates = new ArrayList<>();
+		ArrayList<Integer> pathList = new ArrayList<>();
 		
 		// Initialize every node as unvisited and make it unreachable at first
 		Boolean b[] = new Boolean[81];
@@ -164,7 +203,10 @@ public class HealthConsStratergy extends IStratergy {
 				}
 			}
 			printGraph(dist, 81);
-			generatePath(path);
+			
 		}
+		pathList = backtrackPath(path);
+		followCoordinates = convertIndexToCoordinate(pathList);
+		return followCoordinates;
 	}
 }
