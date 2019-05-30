@@ -9,12 +9,9 @@ import utilities.Coordinate;
 import world.WorldSpatial;
 
 public class Detector {
-	// How many minimum units the wall is away from the player.
-	private int wallSensitivity = 1;
-	
 	//Check if you have a wall in front of you
 	public boolean checkWallAhead(CarController controller, WorldSpatial.Direction orientation,
-			HashMap<Coordinate, MapTile> currentView) {
+			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
 		switch (orientation) {
 		case EAST:
 			return checkEastWall(controller, currentView, wallSensitivity);
@@ -31,7 +28,7 @@ public class Detector {
 	
 	//Check if the wall is on your left hand side given your orientation
 	public boolean checkFollowingWall(CarController controller, WorldSpatial.Direction orientation,
-			HashMap<Coordinate, MapTile> currentView) {
+			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
 		switch (orientation) {
 		case EAST:
 			return checkNorthWall(controller, currentView, wallSensitivity);
