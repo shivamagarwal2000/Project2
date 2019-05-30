@@ -30,7 +30,7 @@ public class MyAutoController extends CarController{
 	
 	public void move(CarController controller, ArrayList <Coordinate> path){
 		boolean turnAlready = false;
-		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
+		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need for speed to turn and progress toward the exit
 			applyForwardAcceleration();   // Tough luck if there's a wall in the way
 		}
 		Collections.reverse(path);
@@ -79,11 +79,22 @@ public class MyAutoController extends CarController{
 		}
 	}
 	
+	public boolean isReachable(ArrayList <Coordinate> path, HashMap<Coordinate, MapTile> currentView) {
+		boolean isReachable = true;
+		for(Coordinate var : path) {
+			if(currentView.get(var).isType(MapTile.Type.WALL)) {
+				isReachable = false;
+				return isReachable;
+			}
+		}
+		return isReachable;
+	}
+	
 	@Override
 	public void update() {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		//if car does not have enough parcels, it will search for it
-		if(this.numParcelsFound()<2){
+		if(this.numParcelsFound()< 2){
 			// Gets what the car can see
 			Coordinate currentPosition = new Coordinate(this.getPosition());
 			Coordinate targetPosition;
@@ -95,9 +106,18 @@ public class MyAutoController extends CarController{
 					obj.generateSourceAndDestination(currentPosition, targetPosition);
 					obj.generateDArray();
 					ArrayList <Coordinate> test= obj.dijkstra();
+					if(isReachable(test, currentView)) {
+						move(this, test);
+					}
+				} 
+				
+				else if (Simulation.toConserve() == Simulation.StrategyMode.FUEL) {
+					HealthConsStratergy obj = new HealthConsStratergy(this, getOrientation(), currentView, targetPosition);
+					obj.generateWeightedMap();
+					obj.generateSourceAndDestination(currentPosition, targetPosition);
+					obj.generateDArray();
+					ArrayList <Coordinate> test= obj.dijkstra();
 					move(this, test);
-				} else if (Simulation.toConserve() == Simulation.StrategyMode.FUEL) {
-					
 				}
 			} else {
 				// checkStateChange();

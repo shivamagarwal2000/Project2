@@ -40,23 +40,23 @@ public class HealthConsStratergy extends IStratergy {
 			if (tile.isType(MapTile.Type.TRAP)) {
 				TrapTile trapT = (TrapTile) tile;
 				if(trapT.getTrap().equals("parcel")) {
-					weightedMap.put(var, 1);
+					weightedMap.put(var, 5);
 				}
 				else if(trapT.getTrap().equals("water") || trapT.getTrap().equals("health")) {
-					weightedMap.put(var, 2);
+					weightedMap.put(var, 1);
 				}
 				else if (trapT.getTrap().equals("lava")) {
 					weightedMap.put(var, 25);
 				}
 			}
 			else if(tile.isType(MapTile.Type.ROAD)) {
-				weightedMap.put(var,1);
+				weightedMap.put(var,10);
 			}
 			else if(tile.isType(MapTile.Type.WALL)) {
 				weightedMap.put(var, 100000);
 			}
 			else {
-				weightedMap.put(var, 5);
+				weightedMap.put(var, 100);
 			}
 					
 		}
