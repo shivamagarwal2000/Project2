@@ -3,6 +3,9 @@ package mycontroller;
 import controller.CarController;
 import swen30006.driving.Simulation;
 import world.Car;
+import world.WorldSpatial;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tiles.MapTile;
@@ -23,7 +26,43 @@ public class MyAutoController extends CarController{
 	public Detector getDetector() {
 		return detector;
 	}
-	    
+	
+	public void move(CarController controller, ArrayList <Coordinate> path){
+		if(controller.getSpeed() < Settings.getCAR_MAX_SPEED()){
+			controller.applyForwardAcceleration();
+		}
+		for (Coordinate target: path){
+			Coordinate currentPosition = new Coordinate(controller.getPosition());
+			WorldSpatial.Direction currentDirection = controller.getOrientation();
+			switch (currentDirection) {
+			case EAST:
+				if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnRight();
+				}
+			case NORTH:
+				if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x-1==currentPosition.x&&target.y-1==currentPosition.y){
+					controller.turnRight();
+				}
+			case SOUTH:
+				if(target.x-1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnRight();
+				}
+			case WEST:
+				if(target.x+1==currentPosition.x&&target.y+1==currentPosition.y){
+					controller.turnLeft();
+				} else if(target.x+1==currentPosition.x&&target.y-1==currentPosition.y){
+					controller.turnRight();
+				}
+			}
+		}
+	}
+	
 	// Coordinate initialGuess;
 	// boolean notSouth = true;
 	@Override
@@ -39,14 +78,16 @@ public class MyAutoController extends CarController{
 				obj.generateWeightedMap();
 				obj.generateSourceAndDestination(currentPosition, targetPosition);
 				obj.generateDArray();
-				obj.dijkstra();
+				ArrayList <Coordinate> test= obj.dijkstra();
+				move(this, test);
 			}
-		}
+		}else{
 			
 		// checkStateChange();
 		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
 			applyForwardAcceleration();   // Tough luck if there's a wall in the way
 		}
+
 		if (isFollowingWall) {
 			// If wall no longer on left, turn left
 			if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
@@ -63,6 +104,7 @@ public class MyAutoController extends CarController{
 				turnRight();
 				isFollowingWall = true;
 			}
+		}
 		}
 			
 	}
