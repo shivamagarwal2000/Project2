@@ -236,7 +236,12 @@ public class MyAutoController extends CarController{
 				followingWallToExit(currentView);
 			} else {
 				ArrayList <Coordinate> exitWay = getFinalPath(currentPosition, exit, currentView);
-				move(this, exitWay);
+				if(exitWay != null) {
+					move(this, exitWay);
+				}
+				else {
+					followingWallToExit(currentView);
+				}
 			}
 		}
 	}	
