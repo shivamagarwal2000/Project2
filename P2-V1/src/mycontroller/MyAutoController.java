@@ -128,6 +128,38 @@ public class MyAutoController extends CarController{
 		}
 	}
 	
+	public ArrayList<Coordinate> getFinalPath(Coordinate start, Coordinate end, HashMap<Coordinate, MapTile> currentView) {
+		
+		ArrayList<Coordinate> finalPath = new ArrayList<Coordinate>();
+		Coordinate temp;
+		if(start.y > end.y) {
+			temp = start;
+			temp.y = start.y - 1;
+			finalPath.add(temp);
+			return (finalPath);
+//			MapTile tile = currentView.get(temp);
+//			if(!tile.isType(MapTile.Type.WALL)) {
+//				return temp;
+//			}
+//			else if (start.y < end.y) {
+//				temp.x = start.x;
+//				temp.y = start.y + 1;
+//				MapTile tile1 = currentView.get(temp);
+//				if(!tile.isType(MapTile.Type.WALL)) {
+//					return temp;
+//				}
+//			}
+		}
+		
+		else if(start.y == end.y && start.x < end.x) {
+			temp = start;
+			temp.x = start.x + 1;
+			finalPath.add(temp);
+			return (finalPath);
+		}
+		return (null);
+	}
+	
 	public void followingWallToExit(HashMap<Coordinate, MapTile> currentView){
 		// checkStateChange();
 		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
@@ -203,7 +235,8 @@ public class MyAutoController extends CarController{
 			if(!recorded){
 				followingWallToExit(currentView);
 			} else {
-				System.out.println(exit);
+				ArrayList <Coordinate> exitWay = getFinalPath(currentPosition, exit, currentView);
+				move(this, exitWay);
 			}
 		}
 	}	

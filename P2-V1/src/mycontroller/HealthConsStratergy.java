@@ -204,4 +204,6 @@ public class HealthConsStratergy extends IStratergy {
 		followCoordinates = convertIndexToCoordinate(pathList);
 		return followCoordinates;
 	}
+	
+	
 }
