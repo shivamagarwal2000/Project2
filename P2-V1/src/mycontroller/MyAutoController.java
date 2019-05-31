@@ -136,14 +136,21 @@ public class MyAutoController extends CarController{
 			temp = start;
 			temp.y = start.y - 1;
 			finalPath.add(temp);
-			return finalPath;
+			if(isReachable(finalPath, currentView)) {
+				return finalPath;
+			}
 		}
 		
 		else if(start.y == end.y && start.x < end.x) {
 			temp = start;
 			temp.x = start.x + 1;
 			finalPath.add(temp);
-			return finalPath;
+			if(isReachable(finalPath, currentView)) {
+				return finalPath;
+			}
+		}
+		else {
+			return null;
 		}
 		return null;
 	}
@@ -226,9 +233,11 @@ public class MyAutoController extends CarController{
 				ArrayList <Coordinate> exitWay = getFinalPath(currentPosition, exit, currentView);
 				if(exitWay != null) {
 					move(this, exitWay);
+					System.out.println(exitWay);
+					System.out.println("I am using the hard code");
 				}
 				else {
-					followingWallToExit(currentView);
+					followingWall(currentView);
 				}
 			}
 		}

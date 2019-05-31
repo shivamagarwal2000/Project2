@@ -38,8 +38,9 @@ public class FuelConsStratergy extends IStratergy {
 				else if(trapT.getTrap().equals("water") || trapT.getTrap().equals("health")) {
 					weightedMap.put(var, 1);
 				}
+				// Do not consider lava as a danger in this case so we put lesser weight to it
 				else if (trapT.getTrap().equals("lava")) {
-					weightedMap.put(var, 25);
+					weightedMap.put(var, 10);
 				}
 			}
 			else if(tile.isType(MapTile.Type.ROAD)) {

@@ -37,6 +37,7 @@ public class HealthConsStratergy extends IStratergy {
 				if(trapT.getTrap().equals("parcel")) {
 					weightedMap.put(var, 5);
 				}
+				
 				else if(trapT.getTrap().equals("water") || trapT.getTrap().equals("health")) {
 					weightedMap.put(var, 1);
 				}
