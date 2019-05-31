@@ -94,7 +94,7 @@ public class MyAutoController extends CarController{
 	public void update() {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		//if car does not have enough parcels, it will search for it
-		if(this.numParcelsFound()< 3){
+		if(this.numParcelsFound()< 2){
 			// Gets what the car can see
 			Coordinate currentPosition = new Coordinate(this.getPosition());
 			Coordinate targetPosition;
@@ -126,6 +126,7 @@ public class MyAutoController extends CarController{
 							}
 						} else {
 							// Start wall-following (with wall on right) as soon as we see a wall straight ahead
+							// Unless there are also a wall on the left
 							if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
 								if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
 									turnRight();
@@ -165,6 +166,7 @@ public class MyAutoController extends CarController{
 					}
 				} else {
 					// Start wall-following (with wall on right) as soon as we see a wall straight ahead
+					// Unless there are also a wall on the left
 					if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
 						if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
 							turnRight();
@@ -184,14 +186,17 @@ public class MyAutoController extends CarController{
 				// If wall no longer on right, turn right
 				if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
 					turnRight();
+					System.out.println("              can you see me right");
 				} else {
-					// If wall on right and wall straight ahead, turn left
-					if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
+					// If a wall or three lava traps on right and straight ahead, turn left
+					if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())
+							||getDetector().checkThreeLavaAhead(this, getOrientation(), currentView, Settings.getLavaSensitivity(), 3)) {
 						turnLeft();
 					}
 				}
 			} else {
 				// Start wall-following (with wall on right) as soon as we see a wall straight ahead
+				// Unless there are also a wall on the left
 				if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
 					if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
 						turnRight();
