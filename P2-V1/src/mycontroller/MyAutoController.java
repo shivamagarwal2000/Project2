@@ -94,37 +94,65 @@ public class MyAutoController extends CarController{
 	public void update() {
 		HashMap<Coordinate, MapTile> currentView = getView();
 		//if car does not have enough parcels, it will search for it
-		if(this.numParcelsFound()< 2){
+		if(this.numParcelsFound()< 3){
 			// Gets what the car can see
 			Coordinate currentPosition = new Coordinate(this.getPosition());
 			Coordinate targetPosition;
 			if((targetPosition = getDetector().getParcel(currentView, this))!= null) {
-			
 				if(Simulation.toConserve() == Simulation.StrategyMode.HEALTH) {
 					HealthConsStratergy obj = new HealthConsStratergy(this, getOrientation(), currentView, targetPosition);
 					obj.generateWeightedMap();
 					obj.generateSourceAndDestination(currentPosition, targetPosition);
 					obj.generateDArray();
-					ArrayList <Coordinate> test= obj.dijkstra();
-					if(isReachable(test, currentView)) {
-						move(this, test);
+					ArrayList <Coordinate> way= obj.dijkstra();
+					System.out.println(way);
+					if(isReachable(way, currentView)) {
+						move(this, way);
+						isFollowingWall = false;
+					} else {
+						// checkStateChange();
+						if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
+							applyForwardAcceleration();   // Tough luck if there's a wall in the way
+						}
+						if (isFollowingWall) {
+							// If wall no longer on right, turn right
+							if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
+								turnRight();
+							} else {
+								// If wall on right and wall straight ahead, turn left
+								if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
+									turnLeft();
+								}
+							}
+						} else {
+							// Start wall-following (with wall on right) as soon as we see a wall straight ahead
+							if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
+								if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
+									turnRight();
+								} else {
+									turnLeft();
+									isFollowingWall = true;
+								}
+							}
+						}
 					}
-				} 
-				
+				}
 				else if (Simulation.toConserve() == Simulation.StrategyMode.FUEL) {
 					HealthConsStratergy obj = new HealthConsStratergy(this, getOrientation(), currentView, targetPosition);
 					obj.generateWeightedMap();
 					obj.generateSourceAndDestination(currentPosition, targetPosition);
 					obj.generateDArray();
-					ArrayList <Coordinate> test= obj.dijkstra();
-					move(this, test);
+					ArrayList <Coordinate> way= obj.dijkstra();
+					if(isReachable(way, currentView)) {
+						move(this, way);
+						isFollowingWall = false;
+					}
 				}
 			} else {
 				// checkStateChange();
 				if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
 					applyForwardAcceleration();   // Tough luck if there's a wall in the way
 				}
-	
 				if (isFollowingWall) {
 					// If wall no longer on right, turn right
 					if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
@@ -138,8 +166,12 @@ public class MyAutoController extends CarController{
 				} else {
 					// Start wall-following (with wall on right) as soon as we see a wall straight ahead
 					if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
-						turnLeft();
-						isFollowingWall = true;
+						if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
+							turnRight();
+						} else {
+							turnLeft();
+							isFollowingWall = true;
+						}
 					}
 				}
 			}
@@ -148,7 +180,6 @@ public class MyAutoController extends CarController{
 			if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
 				applyForwardAcceleration();   // Tough luck if there's a wall in the way
 			}
-
 			if (isFollowingWall) {
 				// If wall no longer on right, turn right
 				if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())) {
@@ -162,8 +193,12 @@ public class MyAutoController extends CarController{
 			} else {
 				// Start wall-following (with wall on right) as soon as we see a wall straight ahead
 				if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
-					turnLeft();
-					isFollowingWall = true;
+					if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
+						turnRight();
+					} else {
+						turnLeft();
+						isFollowingWall = true;
+					}
 				}
 			}
 		}

@@ -113,7 +113,7 @@ public class Detector {
 		}
 	}
 	
-	//Check if the wall is on your left hand side given your orientation
+	//Check if the wall is on your right hand side given your orientation
 	public boolean checkFollowingWall(CarController controller, WorldSpatial.Direction orientation,
 			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
 		switch (orientation) {
@@ -125,6 +125,23 @@ public class Detector {
 			return checkWestWall(controller, currentView, wallSensitivity);
 		case WEST:
 			return checkNorthWall(controller, currentView, wallSensitivity);
+		default:
+			return false;
+		}
+	}
+	
+	//Check if the wall is on your left hand side given your orientation
+	public boolean checkLeftWall(CarController controller, WorldSpatial.Direction orientation,
+			HashMap<Coordinate, MapTile> currentView, int wallSensitivity) {
+		switch (orientation) {
+		case EAST:
+			return checkNorthWall(controller, currentView, wallSensitivity);
+		case NORTH:
+			return checkWestWall(controller, currentView, wallSensitivity);
+		case SOUTH:
+			return checkEastWall(controller, currentView, wallSensitivity);
+		case WEST:
+			return checkSouthWall(controller, currentView, wallSensitivity);
 		default:
 			return false;
 		}
