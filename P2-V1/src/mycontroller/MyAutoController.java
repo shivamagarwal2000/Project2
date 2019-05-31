@@ -136,28 +136,16 @@ public class MyAutoController extends CarController{
 			temp = start;
 			temp.y = start.y - 1;
 			finalPath.add(temp);
-			return (finalPath);
-//			MapTile tile = currentView.get(temp);
-//			if(!tile.isType(MapTile.Type.WALL)) {
-//				return temp;
-//			}
-//			else if (start.y < end.y) {
-//				temp.x = start.x;
-//				temp.y = start.y + 1;
-//				MapTile tile1 = currentView.get(temp);
-//				if(!tile.isType(MapTile.Type.WALL)) {
-//					return temp;
-//				}
-//			}
+			return finalPath;
 		}
 		
 		else if(start.y == end.y && start.x < end.x) {
 			temp = start;
 			temp.x = start.x + 1;
 			finalPath.add(temp);
-			return (finalPath);
+			return finalPath;
 		}
-		return (null);
+		return null;
 	}
 	
 	public void followingWallToExit(HashMap<Coordinate, MapTile> currentView){
