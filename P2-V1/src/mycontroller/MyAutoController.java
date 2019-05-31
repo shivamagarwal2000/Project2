@@ -155,37 +155,6 @@ public class MyAutoController extends CarController{
 		return null;
 	}
 	
-	public void followingWallToExit(HashMap<Coordinate, MapTile> currentView){
-		// checkStateChange();
-		if(getSpeed() < Settings.getCAR_MAX_SPEED()){       // Need speed to turn and progress toward the exit
-			applyForwardAcceleration();   // Tough luck if there's a wall in the way
-		}
-		if (isFollowingWall) {
-			// If wall no longer on right, turn right
-			if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())
-					&&!getDetector().checkFourLavaRight(this, getOrientation(), currentView, Settings.getLavaSensitivity(), 1)) {
-				turnRight();
-			} else {
-				// If a wall or three lava traps on right and straight ahead, turn left
-				if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())
-						||getDetector().checkThreeLavaAhead(this, getOrientation(), currentView, Settings.getLavaSensitivity(), 1)) {
-					turnLeft();
-				}
-			}
-		} else {
-			// Start wall-following (with wall on right) as soon as we see a wall straight ahead
-			// Unless there are also a wall on the left
-			if(getDetector().checkWallAhead(this, getOrientation(),currentView, Settings.getWallSensitivity())) {
-				if(getDetector().checkLeftWall(this, getOrientation(), currentView, Settings.getWallSensitivity())){
-					turnRight();
-				} else {
-					turnLeft();
-					isFollowingWall = true;
-				}
-			}
-		}
-	}
-	
 	@Override
 	public void update() {
 		// Gets what the car can see
@@ -228,7 +197,7 @@ public class MyAutoController extends CarController{
 			//if car already has enough parcels, it will just follow the wall and find the exit
 			//and if it has already passed the exit yet, the car would go to exit directly
 			if(!recorded){
-				followingWallToExit(currentView);
+				followingWall(currentView);
 			} else {
 				ArrayList <Coordinate> exitWay = getFinalPath(currentPosition, exit, currentView);
 				if(exitWay != null) {
