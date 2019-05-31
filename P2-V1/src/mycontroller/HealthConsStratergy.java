@@ -1,12 +1,7 @@
 package mycontroller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-
-import com.badlogic.gdx.utils.Queue;
 
 import controller.CarController;
 import tiles.MapTile;
