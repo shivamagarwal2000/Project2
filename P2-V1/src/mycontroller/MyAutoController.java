@@ -15,6 +15,8 @@ import utilities.Coordinate;
 public class MyAutoController extends CarController{		
 		
 	private boolean isFollowingWall = false; // This is set to true when the car starts sticking to a wall.
+	Coordinate exit = null; // This is to store the location of exit if pass by
+	Boolean recorded = false;
 	
 	public MyAutoController(Car car) {
 		super(car);
@@ -89,6 +91,13 @@ public class MyAutoController extends CarController{
 		}
 		return isReachable;
 	}
+
+	public void recordExit(HashMap<Coordinate, MapTile> currentView, Coordinate currentPosition) {
+		if (currentView.get(currentPosition).isType(MapTile.Type.FINISH)){
+			exit = currentPosition;
+			recorded = true;
+		}
+	}
 	
 	public void followingWall(HashMap<Coordinate, MapTile> currentView){
 		// checkStateChange();
@@ -129,7 +138,6 @@ public class MyAutoController extends CarController{
 			if(!getDetector().checkFollowingWall(this, getOrientation(), currentView, Settings.getWallSensitivity())
 					&&!getDetector().checkFourLavaRight(this, getOrientation(), currentView, Settings.getLavaSensitivity(), 1)) {
 				turnRight();
-				System.out.println("              can you see me right");
 			} else {
 				// If a wall or three lava traps on right and straight ahead, turn left
 				if(getDetector().checkWallAhead(this, getOrientation(), currentView, Settings.getWallSensitivity())
@@ -153,11 +161,13 @@ public class MyAutoController extends CarController{
 	
 	@Override
 	public void update() {
+		// Gets what the car can see
 		HashMap<Coordinate, MapTile> currentView = getView();
+		Coordinate currentPosition = new Coordinate(this.getPosition());
+		// Try to record the exit location if pass by
+		recordExit(currentView,currentPosition);
 		//if car does not have enough parcels, it will search for it
 		if(this.numParcelsFound()< numParcels()){
-			// Gets what the car can see
-			Coordinate currentPosition = new Coordinate(this.getPosition());
 			Coordinate targetPosition;
 			if((targetPosition = getDetector().getParcel(currentView, this))!= null) {
 				if(Simulation.toConserve() == Simulation.StrategyMode.HEALTH) {
@@ -166,7 +176,6 @@ public class MyAutoController extends CarController{
 					obj.generateSourceAndDestination(currentPosition, targetPosition);
 					obj.generateDArray();
 					ArrayList <Coordinate> way= obj.dijkstra();
-					System.out.println(way);
 					if(isReachable(way, currentView)) {
 						move(this, way);
 						isFollowingWall = false;
@@ -188,8 +197,14 @@ public class MyAutoController extends CarController{
 			} else {
 				followingWall(currentView);
 			}
-		} else {//if car already has enough parcels, it will just follow the wall and find the exit
-			followingWallToExit(currentView);
+		} else {
+			//if car already has enough parcels, it will just follow the wall and find the exit
+			//and if it has already passed the exit yet, the car would go to exit directly
+			if(!recorded){
+				followingWallToExit(currentView);
+			} else {
+				System.out.println(exit);
+			}
 		}
 	}	
 }
